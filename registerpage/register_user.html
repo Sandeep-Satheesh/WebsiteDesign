@@ -1,0 +1,225 @@
+<!DOCTYPE html>    
+<html>
+    <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js">
+    </script>
+    <script src="../commons/commons.js"></script>
+        
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="../commons/commons.css">
+        
+    <style>
+        body {  
+            margin: 0;  
+            padding: 0;  
+            background-color: wheat;
+            color: black;
+            font-family: 'Segoe UI';  
+        }  
+        .register {  
+            width: 382px;
+            border-style: solid;
+            overflow: hidden;  
+            margin: auto;  
+            align-content: center;
+            margin: 20 0 0 450px;  
+            padding: 40px;  
+            border-radius: 15px;  
+        }  
+        h2 {  
+            text-align: center;  
+            padding: 20px;  
+        }  
+        label {  
+            font-size: 17px;  
+        }  
+        .textbox {  
+            width: 300px;  
+            height: 30px;  
+            border: none;  
+            border-radius: 1px; 
+            border-style: solid;
+            padding-left: 8px;  
+        }  
+          
+        .button {  
+            width: 150px;  
+            height: 30px;
+            border: none;
+            background-color: lightgrey;
+            border-radius: 17px;
+        }  
+        span {  
+            font-size: 17px;  
+        }  
+        a {  
+            float: right;  
+        }
+        .dark-mode {
+            background-color: black;
+            color: white;
+            border-color: white;
+        }
+    </style>
+<head>    
+    <title>Register new user — OldBooks Portal</title>
+</head>    
+<body>    
+    <h2>New User Registration</h2><br>  
+    <div class="register" ng-app="registerUserApp" ng-controller="formCtrl">   
+    <form id='regForm' name="frmReg" method="post"><b>Enter your details below to register!</b><br><br>
+<!--            first name          -->
+        <label>First Name</label>
+        <table border="0">
+            <tr>
+                <td>
+                    <input type="text" ng-pattern="nameRegex" name="firstName" ng-model="firstName" class="textbox" placeholder="Your first name" required>
+                </td>
+                <td>
+                    <img width="25" height="25" ng-src="{{darkModeEnabled ? './invalid_input_dark.jpg' : './invalid_input_light.jpg'}}" ng-show= "frmReg.firstName.$dirty && frmReg.firstName.$invalid" alt="Invalid first name!" title="Invalid first name!">
+                </td>
+            </tr>
+        </table>
+<!--            last name          -->
+        <label>Last Name</label>    
+        <table border="0">
+            <tr>
+                <td>
+                    <input type="text" ng-pattern="nameRegex" name="lastName" ng-model="lastName" class="textbox" placeholder="Your first name" required>
+                </td>
+                <td>
+                    <img width="25" height="25" ng-src="{{darkModeEnabled ? './invalid_input_dark.jpg' : './invalid_input_light.jpg'}}" ng-show= "frmReg.lastName.$dirty && frmReg.lastName.$invalid" alt="Invalid last name!" title="Invalid last name!">
+                </td>
+            </tr>
+        </table>
+        
+        <label>Mobile No.</label>    
+        <table border="0">
+            <tr>
+                <td>
+                    <input type="number" name="mobileNo" ng-model="mobileNo" class="textbox" placeholder="Your 10-digit mobile number" min="1111111111" max="9999999999" required>
+                </td>
+                <td>
+                    <img width="25" height="25" ng-src="{{darkModeEnabled ? './invalid_input_dark.jpg' : './invalid_input_light.jpg'}}" ng-show= "frmReg.mobileNo.$dirty && frmReg.mobileNo.$invalid" alt="Invalid mobile number!" title="Invalid mobile number!">
+                </td>
+            </tr>
+        </table>
+        
+<!--            username          -->
+        <br>
+        <label>User ID</label>    
+        <table border="0">
+            <tr>
+                <td>
+                    <input type="text" id="userID" ng-pattern="userNameRegex" name="username" ng-model="username" class="textbox" placeholder="Your username" required>
+                </td>
+                <td>
+                    <img width="25" height="25" ng-src="{{darkModeEnabled ? './invalid_input_dark.jpg' : './invalid_input_light.jpg'}}" ng-show= "frmReg.username.$dirty && frmReg.username.$invalid" alt="Invalid username!" title="Invalid username!">
+                </td>
+            </tr>
+        </table>
+        
+        <label>Password</label>
+        <table border="0">
+            <tr>
+                <td>
+                    <input type="password" name="password" ng-model="password" class="textbox" placeholder="Your password" required>
+                </td>
+                <td>
+                    <img width="25" height="25" ng-src="{{darkModeEnabled ? './invalid_input_dark.jpg' : './invalid_input_light.jpg'}}" ng-show= "frmReg.password.$dirty && frmReg.password.$invalid" alt="Invalid password!" title="Invalid password!">
+                </td>
+            </tr>
+        </table>
+
+        <br><br>
+        <table>
+            <tr>
+                <td>                    
+                    <button class="button" name="btnReg" id="btnRegister" ng-disabled="frmReg.firstName.$invalid || frmReg.lastName.$invalid || frmReg.username.$invalid || frmReg.password.$invalid || frmReg.mobileNo.$invalid" ng-click="registerUser();">Register!</button>
+                </td>
+                <td>
+                    <button class="button" name="btnReset" id="btnReset" onclick="window.reload();">Clear</button>
+                </td>
+            </tr>
+        </table>
+        <div id="statusDiv" style="color: yellow"><strong><center>Processing, please wait...</center></strong></div>
+    </form>    
+</div>
+    <script>
+        onFormLoad();
+        angular.module('registerUserApp', [])
+            .controller('formCtrl', function($scope) {
+                $scope.darkModeEnabled = systemIsInDarkMode();
+                
+                $scope.nameRegex = "[a-zA-Z]+";
+                $scope.userNameRegex = "[_a-zA-Z][_a-zA-Z0-9]*";
+            
+                $scope.registerUser = function(status, res) {
+                    document.getElementById('statusDiv').style.display = 'block';
+                    document.getElementById('statusDiv').style.color = 'yellow';
+                    document.getElementById('statusDiv').innerHTML = "<strong><center>Processing, please wait...</center></strong>";
+                    
+                    document.getElementById('btnRegister').disabled = true;
+                    document.getElementById('btnReset').disabled = true;
+                    var data = {};
+                    data['name'] = {'first' : $scope.firstName, 'last' : $scope.lastName};
+                    data['mobileNo'] = $scope.mobileNo;
+                    data['uIDhash'] = $scope.username;
+                    data['pwdHash'] = $scope.password;
+                    
+                    fetchResultFromServer("http://localhost:2002/regUser",
+                            JSON.stringify(data), "POST",
+                        function(status, res) {
+                            
+                            document.getElementById('btnRegister').disabled = false;
+                            document.getElementById('btnReset').disabled = false;
+                            if (status === 200)
+                                if (res === "OK") { //success
+                                    document.getElementById('statusDiv').style.color = systemIsInDarkMode() ? 'lightgreen' : 'green';
+                                    document.getElementById('statusDiv').innerHTML = '<strong><center>Registration was successful! You will be redirected to the homepage shortly...</center></strong>';
+                                    setTimeout(
+                                        function() {
+                                            location.replace('../mainpage/main_page.html');
+                                        }, 1250
+                                    );
+                                }
+                                else if (res === "USRALRDYREG") { //errorCallback
+                                    document.getElementById('statusDiv').style.color = 'red';
+                                    document.getElementById('statusDiv').innerHTML = '<strong><center>That user ID is already taken! Please select a unique user ID!</center></strong>';
+                                }
+                                else { //errorCallback
+                                    document.getElementById('statusDiv').style.color = 'red';
+                                    document.getElementById('statusDiv').innerHTML = '<strong><center>There was an error in processing the data you sent! Please try again in sometime!</center></strong>';
+                                }
+
+                            else { //failureCallback
+                                document.getElementById('statusDiv').style.color = 'red';
+                                document.getElementById('statusDiv').innerHTML = '<strong><center>The data was not able to reach the server! Please check your connection and try again in a while!</center></strong>';
+
+                            }
+                        }
+                    );
+                };
+        });
+        function onFormLoad() {
+            toggleDarkMode();
+            document.getElementById('statusDiv').style.display = 'none';
+        }
+        
+        function toggleDarkMode() {
+            if (systemIsInDarkMode()) {
+                // dark mode
+                var element = document.body;
+                element.classList.toggle("dark-mode");
+                document.getElementsByClassName('register')[0].style.backgroundColor = '#212121';
+            }
+            else {
+                document.getElementsByClassName('register')[0].style.backgroundColor = 'white';
+                document.getElementById('statusDiv').style.color = 'white';
+            }
+        }
+        
+    </script>
+</body>    
+</html>

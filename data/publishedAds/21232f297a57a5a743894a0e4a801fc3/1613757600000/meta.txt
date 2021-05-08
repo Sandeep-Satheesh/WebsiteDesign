@@ -1,0 +1,1 @@
+{"Name":"Concepts of Physics 1","Author":"HC Verma","PubYear":"2005","Edition":"3","UploaderID":"admin","Price":"120","Description":"ha","ArrivalTime":1613757600000,"Available":"NO","ImgLink":"../../data/publishedAds/21232f297a57a5a743894a0e4a801fc3/1613757600000/ThumbImg.jpeg"}

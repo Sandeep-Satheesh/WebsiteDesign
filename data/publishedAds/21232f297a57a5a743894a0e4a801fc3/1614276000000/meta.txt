@@ -1,0 +1,2 @@
+{Name : "Database Management System", Author : "Puneet Kumar, Sushil Bhardwaj", PubYear : "2014", Edition : "2nd", ArrivalTime: 1614276000000, Available: "YES", UploaderID : "admin", Price: 450, ImgLink : "C:\Users\Sandeep S\Sandeep Data\SSNCE Docs\Sem 6\WPLab\WebsiteDesign\createadpage\publishedAds\21232f297a57a5a743894a0e4a801fc3\1614276000000\ThumbImg.jpg"
+}

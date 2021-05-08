@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Message sent!</title>
+	</head>
+	<body>
+		<h1 id="nameField" name="nameField"><center>Hi!<center></h1>
+		<center><img src="./thankyou.jpg" onload="javascript:displayWelcomeMsg();">
+		<script>
+			function displayWelcomeMsg() {
+				var name = localStorage.getItem('fname');
+				var clickCount = localStorage.getItem('clickCount');
+				
+				if (clickCount == null || isNaN(clickCount) || clickCount == '') clickCount = "0";
+				else clickCount = parseInt(clickCount);
+				
+				document.getElementById('nameField').innerHTML = '<center> Hi ' + name + "! You are the " + getRank(clickCount) + " person to connect with me. Hope to get in touch soon!</center>";
+			}
+
+			function getRank(i) {
+				var j = i % 10,
+					k = i % 100;
+				if (j == 1 && k != 11) {
+					return i + "st";
+				}
+				if (j == 2 && k != 12) {
+					return i + "nd";
+				}
+				if (j == 3 && k != 13) {
+					return i + "rd";
+				}
+				return i + "th";
+			}
+		</script>
+	</body>
+</html>

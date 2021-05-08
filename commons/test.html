@@ -1,0 +1,33 @@
+<!DOCTYPE html>    
+<html>
+    <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<body>
+    <form ng-app="app" ng-controller="ctrl" name="frmReg" method="get">
+        <label>Username</label>
+        <input type="text" ng-pattern="userNameRegex" name="username" ng-model="username" class="textbox" placeholder="Your username" required>
+        <br><br>
+        
+        <label>Password</label> 
+        
+        <input type="password" name="password" ng-pattern="passwordRegex" ng-model="password" class="textbox" placeholder="Your password" required>
+        <br><br>
+        <button class="button" name="btnReg" id="btnRegister" ng-disabled="frmReg.username.$invalid || frmReg.password.$invalid" ng-click="registerUser();">Register!</button>
+        
+        <button class="button" name="btnReset" id="btnClear" onclick="window.reload();">Clear</button>
+    </form>    
+    <script>
+        angular.module('app', [])
+            .controller('ctrl', function($scope) {
+                $scope.userNameRegex = "[_a-zA-Z][_a-zA-Z0-9]*";
+                $scope.passwordRegex = "^(?=.*?\W).*$";
+
+                $scope.registerUser = function() {
+                    if ($scope.password.length < 6)
+                        alert("Password should be at least 6 characters!");
+                    else
+                        alert('Validated!');
+                }
+            });
+    </script>
+</body>    
+</html>

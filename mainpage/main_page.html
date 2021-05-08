@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        
+        <title>OldBooks Portal — Buy and Sell Used Books</title>
+        <script src="./bower_components/angular/angular.min.js"></script>
+<script src="./bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+        
+        <script src="../commons/navmenu.js"></script>
+        <script src="../commons/commons.js"></script>
+        <script src="../commons/chat_window.js"></script>
+        
+        <script src="./bower_components/videogular/videogular.js"></script>
+        <script src="./bower_components/videogular-controls/vg-controls.js"></script>
+        <script src="./bower_components/videogular-overlay-play/vg-overlay-play.js"></script>
+    
+        <script src="./bower_components/videogular-buffering/vg-buffering.js"></script>
+        
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="../commons/commons.css">
+        <link rel="stylesheet" href="../commons/nav_menu.css">
+        <link rel="stylesheet" href="../commons/chat_window.css">
+        <link rel="stylesheet" href="./videoplayer.css">
+        
+        <link rel="shortcut icon" href="#">
+        
+        <style>
+            .rolling_banner {
+                width: 100vw;
+                height: 700px;
+                position: relative;
+                top: 13%;
+                margin-left: calc(-50% + 50%);
+            }     
+        </style>
+    </head>
+
+    <body>
+        <font face="Segoe UI">
+            <div class="header" id="header">
+
+                <!-- adding image and hamburger button overlay -->
+                <div class="image-menu-container">
+                    <img src="../logo.jpg" alt="OldBooks Portal" id="logo" class="logo">
+                    <div class="overlay" onclick="displayMenu();">
+                        <div class="bar1"></div>
+                        <div class="bar2"></div>
+                        <div class="bar3"></div>
+                    </div>
+                </div>
+                <div class="heading2"><b>OldBooks Portal</b></div>
+                <div class="heading6"><i>Never search anywhere else for old books!</i></div>
+                
+                <div ng-app="navMenu" ng-controller="navMenuCtrl" class="nav-menu w3-bar">
+                    <div class="w3-bar-item w3-button" onclick="location.reload()">Home</div>
+                    <div class="w3-bar-item w3-button" onclick="window.open('../newarrivalspage/new_arrivals_page.html', '_self')">New Arrivals</div>
+                    <div class="w3-bar-item w3-button" onclick="window.open('../calcpage/index.html', '_self')">Calculator</div>
+                    <div class="w3-bar-item w3-button" ng-show="!userLoggedIn" onclick="window.open('../registerpage/register_user.html')">Register</div>
+                    <div class="w3-bar-item w3-button" ng-show="userLoggedIn" onclick="window.open('../createAdPage/create_ad_page.html', '_self')">Create New Ad</div>
+                    <div class="w3-bar-item w3-button" id="loginHyp" onclick="handleLogout();">Sign In</div>
+                </div>
+            </div>
+            <div class="w3-content w3-section rolling_banner">
+                  <img class="mySlides w3-animate-right rolling_banner" src="banner_1.jpg">
+                  <img class="mySlides w3-animate-left rolling_banner" src="banner_2.jpg">
+                  <img class="mySlides w3-animate-right rolling_banner" src="banner_3.jpg">
+                  <img class="mySlides w3-animate-left rolling_banner" src="banner_4.jpg">
+                  <img class="mySlides w3-animate-right rolling_banner" src="banner_5.jpg">
+            </div>
+            <div style="position: relative; padding-top: 20px" class="toggleColorDark">
+                    
+                    <h2 style="font-family: monospace; font-size: 40px"><center>Welcome to OldBooks Portal: The one-stop place for all your book needs!</center></h2>
+                    <br>
+                <div class="toggleColorDark">
+                </div>
+                <center>
+                <div class="toggleColorLight"><br>
+                    <p style="font-size: 30px; margin: 0px 0px 20px 20px">
+                        “We can give you three dollars,” the clerk at the campus bookstore told me.
+                        <br><br><br>
+                        “That’s all?” I asked. I had hoped to get more for the book I wanted to sell back, given what I had paid for it just months before.
+                        <br><br><br>
+                        “Sorry. It’s not assigned next term.” She shrugged.
+                        </p>
+                        <br><br><br>
+                    <p style="font-size: 30px; margin: 0px 0px 20px 20px">
+                        “Well,” I decided, “for three dollars, it will look good on my bookshelf.”
+                        <br><br><br><br>
+
+                        <b><i>That was the moment I kept my first college book.</i></b>
+                    </p>
+                    <p style="font-size: 30px; margin: 0px 0px 40px 40px">
+                        At the end of every term, college students lug piles of books across campus to sell back to the bookstore (or post the books online to sell directly to next term’s students) for a fraction of what they paid for them. Selling back books is so ingrained in college culture that it seems natural, inevitable. Strapped for cash, most students accept the few dollars joyfully.
+
+                    </p>
+                    <br><br>
+                    </div>
+                <br>
+                <p style="font-size: 40px; margin: 0px 0px 20px 20px">
+                    <b>We know how it feels. Fear not, that won't happen here.</b><br>At OldBooks, <b>YOU</b> are in control.<br><br>It's either your price, or nothing.
+                    <br><br>At OldBooks, we let <b>YOU</b> and the <b>BUYER</b> decide how much your book is worth, <i>not the middleman.</i> 
+                </p>
+                    <h2 class="toggleColorLight" style="font-family: fantasy; font-size: 50px"><center>OUR STORY</center></h2>
+                    <br>
+                    
+                    </center>
+                    
+                    <!-- video player ---->
+                    
+
+                <div ng-app="videoPlayerApp" id="videoPlayerDiv" class="videogular-container toggleColorLight">
+                    <div class="toggleColorLight" ng-controller="HomeCtrl as controller">
+                        <videogular class="toggleColorLight" vg-theme="controller.config.theme">
+                            <vg-media class="toggleColorLight" vg-src="controller.config.sources">
+                            </vg-media>
+
+                            <vg-controls class="toggleColorLight" vg-autohide="controller.config.plugins.controls.autoHide" vg-autohide-time="controller.config.plugins.controls.autoHideTime">
+                              <vg-play-pause-button></vg-play-pause-button>
+                              <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
+                              <vg-scrub-bar>
+                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                              </vg-scrub-bar>
+                              <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+                              
+                              <vg-volume>
+                                <vg-mute-button></vg-mute-button>
+                                <vg-volume-bar></vg-volume-bar>
+                              </vg-volume>
+                        <vg-playback-button></vg-playback-button>
+                              <vg-fullscreen-button></vg-fullscreen-button>
+                            </vg-controls>
+                            <vg-overlay-play></vg-overlay-play>
+
+                        </videogular>
+                    </div>
+                    <br><br>
+                </div>
+                <br><br><br>
+            </div>
+            <center>
+                <div class="toggleColorLight">
+                        <br>
+                        <p style="font-family: cursive; font-size: 20px; margin: 0px 0px 20px 20px">
+                            Got books to sell or buy? What are you waiting for? <br><br> Click the logo on the top left of the page to get started!
+                        </p>
+                    <br>
+                    <a href="#logo">Back to the top</a>
+                    <br><br><br>
+                </div>
+            </center>
+        </font>
+        <div class="chat-popup" id="myForm"></div>
+        <button class="open-button" id="btnOpenChatWindow" onclick="handleChatForm()">Open Chat</button>
+        <script>
+            var myIndex = 0;
+            onFormLoad();
+
+
+            function onFormLoad() {
+                toggleDarkMode();
+                carousel();
+                if (sessionStorage.getItem('userLoggedIn') != 'true') {
+                    document.getElementById('btnOpenChatWindow').style.display = 'none';
+                }
+                else {                      document.getElementById('btnOpenChatWindow').style.display = 'block';
+                }
+
+            }
+        
+            angular.module('videoPlayerApp',
+                [
+                    "ngSanitize",
+                    "com.2fdevs.videogular",
+                    "com.2fdevs.videogular.plugins.controls",
+                ]
+            )
+            .controller('HomeCtrl',
+                ["$sce", function ($sce) {
+                    this.config = {
+                        preload: "none",
+                        sources: [
+                            {src: $sce.trustAsResourceUrl("./banner_video1.mp4"), type: "video/mp4"},
+                            {src: $sce.trustAsResourceUrl("./banner_video2.mp4"), type: "video/mp4"},
+                        ],
+                        theme: "./bower_components/videogular-themes-default/videogular.css",
+                        plugins: {
+                          controls: {
+                            autoHide: true,
+                            autoHideTime: 5000
+                          }
+                        }
+                    };
+                }]
+            );
+            
+            angular.bootstrap(document.getElementById('videoPlayerDiv'), ['videoPlayerApp']);
+            
+            function carousel() {
+              var i;
+              var x = document.getElementsByClassName("mySlides");
+              for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";  
+              }
+              myIndex++;
+              if (myIndex > x.length) {myIndex = 1; }    
+                x[myIndex-1].style.display = "block";  
+              setTimeout(carousel, 5000);
+            }
+            function toggleDarkMode() {
+                if (systemIsInDarkMode()) {
+                    var element = document.body;
+                    element.classList.toggle("dark-mode");
+                    document.getElementById('header').style.backgroundColor = "black";
+                    
+                    var e = document.getElementsByClassName('toggleColorLight');
+                    for (let i = 0; i < e.length; i++) {
+                        e[i].style.backgroundColor = '#212121';
+                    }
+                    var f = document.getElementsByClassName('toggleColorDark');
+                    for (let i = 0; i < f.length; i++) {
+                        f[i].style.backgroundColor = 'black';
+                    }
+                }
+                else {
+                    document.getElementById('header').style.backgroundColor = "wheat";
+                }
+            }
+            
+        </script>
+    </body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<a id="title"></a>
+		<title>Assignmnent 1</title>
+		<h1><strong><center>Welcome! Please have a read about me, then drop in a 'Hi'!</center></strong></h1><br><br>		
+			<p id="detailsSentCount"></p>
+	</head>
+	<body style="background-color:powderblue;" onload="javascript:setClickCount()">
+		<center>
+		<font color=blue>
+		<a id="about_me"><u>About Me: </u></a>
+		<table border="1" cellpadding="5" cellspacing="5">
+		  <tr>
+			<td>Name:</td>
+			<td>Sandeep</td>
+		  </tr>
+		  <tr>
+			<td>Age:</td>
+			<td>21</td>
+		  </tr>
+		  <tr>
+			<td>Position:</td>
+			<td>Undergrad student</td>
+		  </tr>
+		  <tr>
+			<td>College:</td>
+			<td>SSN College of Engineering</td>
+		  </tr>
+		  <tr>
+			<td>Skills:</td>
+			<td>C, C++, Java, Android App Dev, SQL, Visual Basic</td>
+		  </tr>
+		  <tr>
+			<td>City:</td>
+			<td>Chennai</td>
+		  </tr>
+		  </table>
+		  <br><br><br><br>
+		<a href="#contact_me">Click to say hi!"</a>
+		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+		
+		<a id="contact_me">Enter your details:</a><br><br><br><br><br><br>
+		<form id="enter_details">
+			<label for="fname">First name: </label>
+			<input type="text" id="fname" name="fname" required><br><br><br><br>
+			
+			<label for="mobile">Mobile Number: </label>
+			<input type="text" id="mobile" name="mobile" required><br><br><br><br>
+			
+			<label for="fname">Email: </label>
+			<input type="email" id="mailid" name="mailid" required><br><br>
+			<input type="submit" value="Submit!" onclick="javascript:sendData();">
+		</form>
+		</font>
+		<script>
+			function setClickCount() {
+				var clickCount = localStorage.getItem("clickCount");
+				
+				if (clickCount == null || isNaN(clickCount) || clickCount == '') clickCount = 0;
+				
+				document.getElementById('detailsSentCount').innerHTML = "<center>Number of people who have shared their details with me: " + clickCount + "</center>";
+				
+			}
+			function ValidateEmail(mail) {
+				 if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail))
+				  
+					return true;
+				 
+					alert("You have entered an invalid email address!");
+					return false;
+			}
+			
+			function sendData() {
+				
+				if (document.getElementById("fname").value == null || document.getElementById("fname").value.length <= 0) {
+					return;
+				}
+				if (isNaN(document.getElementById("mobile").value) || document.getElementById("mobile").value.length != 10) {
+					alert('Invalid mobile number! Please enter a valid 10-digit mobile number!');
+					return;
+				}
+				if (document.getElementById("mailid").value == null || document.getElementById("mailid").value.length <= 0 || !ValidateEmail(document.getElementById("mailid").value)) {
+					return;
+				}
+				 
+				localStorage.setItem('fname', document.getElementById("fname").value);
+				localStorage.setItem('mobNo', document.getElementById("mobile").value);
+				localStorage.setItem('email', document.getElementById("mailid").value);
+				
+				var cc = localStorage.getItem('clickCount');
+				
+				if (cc == null || isNaN(cc) || cc == '') cc = 0;
+				else cc = parseInt(cc);
+				
+				cc = cc + 1;
+				localStorage.setItem('clickCount', cc.toString());
+				document.getElementById('detailsSentCount').innerHTML = "<center>Number of people who have shared their details with me: " + cc + "</center>";
+				
+				window.open('./sent_details.html');
+			}
+		</script>
+		<a href="#title">Click here to go to the top!</a>
+		</center>
+	</body>
+</html>
+	

@@ -1,0 +1,1 @@
+{"Name":"Data Communications and Networking","Author":"Behrouz A Forouzan","PubYear":"2012","Edition":"4","UploaderID":"admin","Price":"120","Description":"ha","ArrivalTime":1611720000000,"Available":"YES","ImgLink":"../../data/publishedAds/21232f297a57a5a743894a0e4a801fc3/1611720000000/ThumbImg.jpg"}

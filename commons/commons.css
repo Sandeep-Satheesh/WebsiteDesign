@@ -1,0 +1,19 @@
+body {
+  background-color: white;
+  color: black;
+}
+
+.dark-mode {
+  background-color: #212121;
+  color: white;
+}
+
+.toggleColorDark {
+    background-color: #efbf7b;
+    color: white;
+}
+
+.toggleColorLight {
+    background-color: wheat;
+    color: white;
+}

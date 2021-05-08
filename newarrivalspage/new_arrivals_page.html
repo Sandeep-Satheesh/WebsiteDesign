@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>New Arrivals @ OldBooks Portal</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="../commons/navmenu.js"></script>
+        <script src="../commons/commons.js"></script>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="../commons/commons.css">
+        <link rel="stylesheet" href="../commons/nav_menu.css">
+        
+        <style>
+            table, .newArrivalsTable {
+                width: 100%;
+                height: auto;
+                top: 30%;
+                border-left: none;
+                border-right: none;
+                border-collapse: collapse;
+                position: absolute;
+            }
+            
+            .content-loader tr td {
+                white-space: nowrap;
+            }
+            
+            .bar .icon {
+                background: wheat;
+                width:24px;
+                height:26px;
+                text-align: center;
+                display:inline-block;
+                text-decoration:none;
+                border-radius:2px;
+            }
+            
+            .iconImage {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .bar {
+                top: 24%;
+                left: 90%;
+                position: absolute;
+                display: inline;
+            }
+            
+            .tooltip {
+              position: relative;
+              display: inline-block;
+            }
+
+            /* Tooltip text */
+            .tooltip .tooltiptext {
+              visibility: hidden;
+              width: 80px;
+              word-wrap: break-word;
+              background-color: wheat;
+              color: black;
+              font-size: 13px;
+              text-align: center;
+              padding: 5px 0;
+              border-radius: 6px;
+              position: absolute;
+              z-index: 1;
+            }
+            
+
+            /* Show the tooltip text when you mouse over the tooltip container */
+            .tooltip:hover .tooltiptext {
+              visibility: visible;
+            }
+            
+            .newArrivalsHeading {
+                width: auto;
+                left: 45%;
+                top: 15%;
+                position: absolute;
+            }
+            
+            .searchParams {
+                position: absolute;
+                top: 24%;
+                width: 12%;
+                height: 25px;
+            }
+
+            .grid-container {
+              display: grid;
+              top: 30%;
+              width: 100%;
+              padding: 10px;
+              position: absolute;
+              grid-template-columns: 33.3% 33.3% 33.3%;
+              background-color: wheat;
+            }
+            .grid-item {
+              background-color: white;
+              border: 10px solid wheat;
+              padding: 10px;
+              text-align: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <font face="Segoe UI">
+            <div class="header" id="header">
+
+                <!-- adding image and hamburger button overlay -->
+                <div class="image-menu-container">
+                    <img src="../logo.jpg" alt="OldBooks Portal" class="logo">
+                    <div class="overlay" onclick="displayMenu();">
+                        <div class="bar1"></div>
+                        <div class="bar2"></div>
+                        <div class="bar3"></div>
+                    </div>
+                </div>
+                <div class="heading2"><b>OldBooks Portal</b></div>
+                <div class="heading6"><i>Never search anywhere else for old books!</i></div>
+                
+                <div ng-app="navMenu" ng-controller="navMenuCtrl" class="nav-menu w3-bar">
+                    <div class="w3-bar-item w3-button" onclick="window.open('../mainpage/main_page.html', '_self');">Home</div>
+                    <div class="w3-bar-item w3-button" ng-show="{{!userLoggedIn}}" onclick="window.open('../registerpage/register_user.html')">Register</div>
+                    <div class="w3-bar-item w3-button" onclick="window.open('../calcpage/index.html', '_self')">Calculator</div>
+                    <div class="w3-bar-item w3-button" ng-show="{{userLoggedIn}}" onclick="window.open('../createAdPage/create_ad_page.html', '_self')">Create New Ad</div>
+                    <div class="w3-bar-item w3-button" id="loginHyp" onclick="handleLogout();">Sign In</div>
+                </div>
+            </div>
+
+            
+            <!-- the layout selector buttons -->
+            <div id="newArrivals" class="newArrivals" ng-app="newArrivalsApp" ng-controller="newArrivalsListCtrl" width="100%">
+                <div class="bar">
+                    View:
+                <div class="icon" ng-click="toggleLayout('list');">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkYzNkFCQ0ZBMTBCRTExRTM5NDk4RDFEM0E5RkQ1NEZCIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkYzNkFCQ0ZCMTBCRTExRTM5NDk4RDFEM0E5RkQ1NEZCIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RjM2QUJDRjgxMEJFMTFFMzk0OThEMUQzQTlGRDU0RkIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RjM2QUJDRjkxMEJFMTFFMzk0OThEMUQzQTlGRDU0RkIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7h1bLqAAAAWUlEQVR42mL8////BwYGBn4GCACxBRlIAIxAA/4jaXoPEkMyjJ+A/g9MDJQBRhYg8RFqMwg8RJIUINYLFDmBUi+ADQAF1n8ofk9yIAy6WPg4GgtDMRYAAgwAdLYwLAoIwPgAAAAASUVORK5CYII=" class="iconImage"></div>
+                
+                <div class="icon" ng-click="toggleLayout('grid');">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjBEQkMyQzE0MTBCRjExRTNBMDlGRTYyOTlBNDdCN0I4IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjBEQkMyQzE1MTBCRjExRTNBMDlGRTYyOTlBNDdCN0I4Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MERCQzJDMTIxMEJGMTFFM0EwOUZFNjI5OUE0N0I3QjgiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MERCQzJDMTMxMEJGMTFFM0EwOUZFNjI5OUE0N0I3QjgiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4MjPshAAAAXklEQVR42mL4////h/8I8B6IGaCYKHFGEMnAwCDIAAHvgZgRyiZKnImBQsACxB+hNoDAQyQ5osQZIT4gH1DsBZABH6AB8x/JaQzEig++WPiII7Rxio/GwmCIBYAAAwAwVIzMp1R0aQAAAABJRU5ErkJggg==" class="iconImage"></div>
+            </div>
+            
+                <!-- Search utils (textbox, combobox) -->
+            <div class="newArrivalsHeading" ng-show="newArrivalsArray.length > 0">
+                <br>
+                <h2><center>Our New Arrivals</center></h2>
+            </div>
+            <div ng-show="newArrivalsArray.length > 0">
+                <div class="searchParams">Search:</div>
+                
+                <input placeholder="Enter search keyword..." type="text" class="searchParams" ng-style="{'margin-left': '4%', 'background-color' : darkMode ? 'black' : 'white', 'color' : darkMode ? 'white' : 'black', 'border': '1px solid black'}" ng-model="searchKeyword">
+                
+            </div>    
+            <div ng-show="layout == 'list'">
+                <table class="newArrivalsTable" cellpadding="20" cellspacing="5">
+                    <tr ng-style="{'background-color': tableHeaderColor, 'border-bottom': darkMode ? '#3f3f3f 1px solid' : '#cfcfcf 1px solid'}">
+                        <td style="text-align: center">Book Name</td>
+                        <td style="text-align: center">Author(s)</td>
+                        <td style="text-align: center">Year of Publishing</td>
+                        <td style="text-align: center">Edition #</td>
+                        <td style="text-align: center">Posted By</td>
+                        <td style="text-align: center">Arrived</td>
+                        <td style="text-align: center">Available</td>
+                        <td style="text-align: center">Price (INR)</td>
+                        <td style="text-align: center">Image of Book</td>
+                    </tr>
+                    <tr ng-repeat="x in newArrivalsArray | filter: searchKeyword" ng-style="{'background-color': colors[$index%2 - 1], 'border-bottom': darkMode ? '#3f3f3f 1px solid' : '#cfcfcf 1px solid'}">
+                        <td style="text-align: center">{{x.Name}}</td>
+                        <td style="text-align: center">{{x.Author}}</td>
+                        <td style="text-align: center">{{x.PubYear}}</td>
+                        <td style="text-align: center">{{x.Edition}}</td>
+                        <td style="text-align: center">{{x.UploaderID}}</td>
+                        <td style="text-align: center">
+                            <div class="tooltip">
+                                {{getElapsedDuration(x.ArrivalTime)}}
+                                <span class="tooltiptext">
+                                    {{x.ArrivalTime | date : 'EEE, dd MMM, yyyy, hh:mm:ss a'}}
+                                </span>
+                            </div>
+                        </td>
+                        <td style="text-align: center" ng-style="{color: getAvailableColor(x.Available)}">{{x.Available}}</td>           
+                        
+                        <td style="text-align: center">
+                            <div ng-show="userLoggedIn">
+                                {{x.Price}}
+                            </div>
+                            <div ng-show="!userLoggedIn">
+                                <div class="tooltip">
+                                    <img class="price-locked-pic" ng-src="{{darkMode ? './locked-dark.jpg' : './locked-light.jpg'}}" width="20px" height="20px">
+                                    <span class="tooltiptext">Sign in to see price!</span>
+                                </div>
+                            </div>
+                        </td>
+                        
+                        <td style="text-align: center">
+                            <div ng-show="userLoggedIn">
+                                <a href="javascript:void(0);" ng-click="handleDisplayImageListView(x.ImgLink);">View Image</a>
+                            </div>
+                            <div ng-show="!userLoggedIn">
+                                <div class="tooltip">
+                                    <img class="price-locked-pic" ng-src="{{darkMode ? './locked-dark.jpg' : './locked-light.jpg'}}" width="20px" height="20px">
+                                    <div class="tooltiptext">Sign in to see images of book!</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="grid-container" ng-show="layout == 'grid'">
+              <div class="grid-item" ng-repeat="x in newArrivalsArray | filter: searchKeyword" ng-style="{ 'background-color': darkMode ? 'black' : 'white', 'border': darkMode ? '10px solid #212121' : '10px solid wheat'}">
+                  <div class="gridImgDetails">
+                      <div ng-show="userLoggedIn">
+                        <img class="book-sample-pic" ng-src="{{getImage(x.ImgLink)}}" alt="Book" width="200px" height="200px">
+                      </div>
+                      <div ng-show="!userLoggedIn">
+                            <div class="tooltip">
+                                <img class="price-locked-pic" ng-src="{{darkMode ? './book_thumbnail_light.png' : './book_thumbnail_dark.png'}}" width="200px" height="200px">
+                                <div class="tooltiptext">Sign in to see images of book!</div>
+                            </div>
+                      </div>
+                        <h3 style="text-align: center">{{x.Name}}</h3>
+                        <h4 style="text-align: center">Author(s): {{x.Author}}</h4>
+                        <h5 style="text-align: left; float: left"><br>Published in: {{x.PubYear}}</h5>
+                        <h5 style="text-align: right; float: right"><br>Edition# {{x.Edition}}</h5>
+                        
+                        <h5 ng-show="userLoggedIn" style="text-align: center; float: center;">Price (INR): {{x.Price}}</h5>
+                        
+                        <h5 ng-show="userLoggedIn" ng-style="{color: getAvailableColor(x.Available)}">{{x.Available == 'YES' ? 'AVAILABLE' : 'NOT AVAILABLE'}}</h5>
+                      
+                        <div ng-show="!userLoggedIn">
+                            <div class="tooltip">
+                                <h5 style="text-align: center; float: center">Price:</h5>
+                                <img class="price-locked-pic" ng-src="{{darkMode ? './locked-dark.jpg' : './locked-light.jpg'}}" width="20px" height="20px">
+                                <span class="tooltiptext">Sign in to see price!</span>
+                            </div>
+                        </div>
+                        <h6 style="text-align: center;">Posted by:  {{x.UploaderID}}
+                            <div class="tooltip">
+                                {{getElapsedDuration(x.ArrivalTime)}}
+                            <span class="tooltiptext">
+                                {{x.ArrivalTime | date : 'EEE, dd MMM, yyyy, hh:mm:ss a'}}
+                            </span>
+                        </div>
+                      </h6>
+                  </div>
+              </div>  
+            </div>
+            <div ng-if="layout == 'none'" class="newArrivalsTable">
+                <h3><center>No books found matching the given search criteria.</center></h3>                
+            </div>
+          </div>
+        <div class="newArrivalsTable">
+            <h2 id="newArrivalsStatus"><center>Attempting to fetch new arrivals...</center></h2>                
+        </div>
+        </font>
+    <script>  
+            var myIndex = 0;
+            onFormLoad();
+            
+            function onFormLoad() {
+                toggleDarkMode();
+                getNewArrivals('http://localhost:2000/getNewArrivals', loadNewArrivals);
+            }
+            
+            function toggleDarkMode() {
+                if (systemIsInDarkMode()) {
+                    var element = document.body;
+                    element.classList.toggle("dark-mode");
+                    document.getElementsByClassName('grid-container')[0].style.backgroundColor = "#212121";
+                    document.getElementById('header').style.backgroundColor = "black";
+                }
+                else { 
+                    document.getElementById('header').style.backgroundColor = "wheat";
+                }
+            }
+        
+            function getNewArrivals(theUrl, callback) {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.withCredentials = false;
+                var visibility = document.getElementById('newArrivals').style.display;
+                document.getElementById('newArrivals').style.display = 'none';
+                try {
+                    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+                    xmlHttp.onreadystatechange = function() {
+                            if(xmlHttp.readyState === XMLHttpRequest.DONE) {
+                            var status = xmlHttp.status;
+                            if (status === 200) {
+                              // The request has been completed successfully
+                              try {
+                                callback(JSON.parse(xmlHttp.responseText));
+                            document.getElementById('newArrivalsStatus').style.display = 'none';
+                                  document.getElementById('newArrivals').style.display = visibility;
+                                
+                              } catch(err) {
+                                  console.log(err);
+                                  document.getElementById('newArrivals').style.display = 'none';
+                                  document.getElementById('newArrivalsStatus').innerHTML = "<center>Unable to fetch new arrivals!</center>";
+                              }
+                            } else {
+                              // Oh no! There has been an error with the request!
+                                console.log('onreadystatechange error!');
+                                document.getElementById('newArrivals').style.display = 'none';
+                                document.getElementById('newArrivalsStatus').innerHTML = "<center>Unable to fetch new arrivals!</center>";
+                            }
+                        }
+                    };
+                    xmlHttp.send();
+                } catch(err) {
+                    console.log(err);
+                    document.getElementById('newArrivals').style.display = 'none';
+                    document.getElementById('newArrivalsStatus').innerHTML = "<center>Unable to fetch new arrivals!</center>";
+                }
+            }
+            
+            function loadNewArrivals(data) {
+                var newArrivalsModule = angular.module('newArrivalsApp', []);
+                newArrivalsModule.controller('newArrivalsListCtrl', function($scope) {
+                
+                $scope.darkMode = systemIsInDarkMode();
+                var formatter = new Intl.NumberFormat('en-IN', {
+                  style: 'currency',
+                  currency: 'INR',
+                  //minimumFractionDigits: 0;
+                  //maximumFractionDigits: 0;
+                });
+                $scope.newArrivalsArray = data;
+                    
+                if (data.length == 0) {
+                    document.getElementsByClassName('bar')[0].style.display = 'none';
+                    return;
+                }
+                    
+            
+                $scope.searchByField = "x.Name";
+                
+                for (var i = 0; i < data.length; i++)
+                    data[i].Price = formatter.format(data[i].Price);
+                   
+                    
+                $scope.toggleLayout = function(layoutMode) {
+                $scope.layout = layoutMode;
+                localStorage.setItem('layoutMode', layoutMode);
+                if (layoutMode == 'grid') {
+                    //need to toggle to grid mode
+                    if (systemIsInDarkMode()) {
+                        document.getElementsByClassName('icon')[0].style.backgroundColor = "#212121";
+                    }
+                    else {
+                        document.getElementsByClassName('icon')[0].style.backgroundColor = "wheat";
+                    }
+                    //select grid icon
+
+                    document.getElementsByClassName('icon')[1].style.backgroundColor = "red";
+
+                }
+                else if (layoutMode == 'list') {
+                    //need to toggle to list mode
+                    if (systemIsInDarkMode())
+                        document.getElementsByClassName('icon')[1].style.backgroundColor = "#212121";
+                    else
+                        document.getElementsByClassName('icon')[1].style.backgroundColor = "wheat";
+
+                    //select list icon
+                    document.getElementsByClassName('icon')[0].style.backgroundColor = "red";
+                }
+            }
+            $scope.userLoggedIn = userIsSignedIn();
+            $scope.toggleLayout('list');
+                
+            $scope.tableHeaderColor = 'wheat';
+
+            $scope.colors = ['#fbf2e0'];
+            //set up grid view images, based on whether user is signed in or not.
+
+            if (systemIsInDarkMode()) {
+                document.getElementsByClassName('icon')[1].style.backgroundColor = "#212121";
+
+                $scope.tableHeaderColor = 'black';
+                $scope.colors[0] = '#212121';
+
+            }
+
+            $scope.getImage = function(imgPath) {
+
+                if (userIsSignedIn()) {
+                    return imgPath;
+                }
+                else if (systemIsInDarkMode()) return './book_thumbnail_light.png';
+                else return './book_thumbnail_dark.png';
+            }
+
+            $scope.handleDisplayImageListView = function(imgLink) {
+                if (userIsSignedIn()) {
+                    document.open(imgLink, '_blank', "width=500,height=500,resizable=no,status=no,toolbar=no,scrollbars=no");
+                }
+                else alert('User must be logged in to view images of the new arrivals!');
+            };
+            $scope.toggleLayout = function(layoutMode) {
+                $scope.layout = layoutMode;
+                localStorage.setItem('layoutMode', layoutMode);
+                if (layoutMode == 'grid') {
+                    //need to toggle to grid mode
+                    if (systemIsInDarkMode()) {
+                        document.getElementsByClassName('icon')[0].style.backgroundColor = "#212121";
+                    }
+                    else {
+                        document.getElementsByClassName('icon')[0].style.backgroundColor = "wheat";
+                    }
+                    //select grid icon
+                    document.getElementsByClassName('icon')[1].style.backgroundColor = "red";
+                }
+                else if (layoutMode == 'list') {
+                    //need to toggle to list mode
+                    if (systemIsInDarkMode())
+                        document.getElementsByClassName('icon')[1].style.backgroundColor = "#212121";
+                    else
+                        document.getElementsByClassName('icon')[1].style.backgroundColor = "wheat";
+
+                    //select list icon
+                    document.getElementsByClassName('icon')[0].style.backgroundColor = "red";
+                }
+            }
+            $scope.getAvailableColor = function(available) {
+                if (systemIsInDarkMode())
+                    if (available == 'YES') 
+                        return 'lightgreen';
+                    else
+                        return 'red';
+                else if (available == 'YES')
+                        return 'green';
+                else return 'red';
+            }
+            $scope.getElapsedDuration = function (time2) {
+                var t = Math.abs(Date.now() - parseInt(time2));
+                if (t < 60000)
+                    return parseInt(t / 1000) + "s ago";
+                else if (t < 3600000)
+                    return parseInt(t / 60000) + "m ago";
+                else if (t < 86400000)
+                    return parseInt(t / 3600000) + "h ago";
+                else if (t < 604800000)
+                    return parseInt(t / 86400000) + "d ago";
+                else if (t < 2592000000)
+                    return parseInt(t / 604800000) + "w ago"
+                ;
+                else if (t < 31536000000)
+                    return parseInt(t / 2592000000) + "M ago";
+                else
+                    return parseInt(t / 31536000000) + "y ago";
+            }      
+        });
+        angular.bootstrap(document.getElementById("newArrivals"), ['newArrivalsApp']);
+                
+    }   
+    </script>
+    </body>
+</html>

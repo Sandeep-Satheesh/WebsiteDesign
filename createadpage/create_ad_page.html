@@ -1,0 +1,272 @@
+<!DOCTYPE html>    
+<html>
+    <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="../commons/navmenu.js"></script>
+    <script src="../commons/commons.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="../commons/commons.css">
+    <link rel="stylesheet" href="../commons/nav_menu.css">
+    
+    <style>
+        body {  
+            margin: 0;  
+            padding: 0;  
+            background-color: wheat;
+            color: black;
+            font-family: 'Segoe UI';  
+        }
+        div.settings {
+            display:grid;
+            grid-template-columns: max-content max-content;
+            grid-gap:5px;
+        }
+        .settings {
+            align-items: center;
+        }
+        div.settings label       { text-align:right; align-self: center; }
+        div.settings label:after { content: ":"; }
+        
+        .register {  
+            width: 75%;
+            border-style: solid;
+            overflow: hidden;  
+            margin: auto;
+            text-align: center;
+            margin: 20 0 0 450px;  
+            padding: 40px;
+            margin-bottom: 100px;
+            border-radius: 15px;  
+        }  
+        h2 {  
+            text-align: center;  
+            padding: 20px;  
+        }  
+        label {  
+            font-size: 17px; 
+            display: inline-block;
+            
+        }  
+        .textbox {  
+            width: 300px;  
+            height: 30px; 
+            border: none;
+            border-radius: 1px;
+            border-style: solid;
+        }  
+        
+        form {
+            text-align: center;
+            margin: 0 auto;
+        }
+        
+        table {
+            display: inline-block; 
+        }
+          
+        .button {  
+            width: 150px;  
+            height: 30px;
+            border: none;
+            background-color: lightgrey;
+            border-radius: 17px;
+        }  
+        span {  
+            font-size: 17px;  
+        }  
+        a {  
+            float: right;  
+        }
+        .dark-mode {
+            background-color: black;
+            color: white;
+            border-color: white;
+        }
+        textarea {
+            resize: vertical;
+        }
+    </style>
+<head>    
+    <title>Create an ad — OldBooks Portal</title>
+</head>    
+<body>
+    <div class="header" id="header">
+                <!-- adding image and hamburger button overlay -->
+                <div class="image-menu-container">
+                    <img src="../logo.jpg" alt="OldBooks Portal" id="logo" class="logo">
+                    <div class="overlay" onclick="displayMenu();">
+                        <div class="bar1"></div>
+                        <div class="bar2"></div>
+                        <div class="bar3"></div>
+                    </div>
+                </div>
+                <div class="heading2"><b>OldBooks Portal</b></div>
+                <div class="heading6"><i>Never search anywhere else for old books!</i></div>
+                
+                <div ng-app="navMenu" ng-controller="navMenuCtrl" class="nav-menu w3-bar">
+                    <div class="w3-bar-item w3-button" onclick="gotoPage('../mainpage/main_page.html', false)">Home</div>
+                    <div class="w3-bar-item w3-button" onclick="gotoPage('../newarrivalspage/new_arrivals_page.html', false)">New Arrivals</div>
+                    <div class="w3-bar-item w3-button" ng-show="{{!userLoggedIn}}" onclick="window.open('../registerpage/register_user.html', false)">Register</div>
+                    <div class="w3-bar-item w3-button" id="loginHyp" onclick="gotoPage('../mainpage/main_page.html', true);">Sign In</div>
+                </div>
+            </div>
+    <br><br><br>
+    <h2>Create an Ad For a New Book</h2><br>
+    <div class="register" id="createAdDiv" ng-app="createAdApp" ng-controller="formCtrl"> 
+    
+    <form id="uploadForm" name="frmCreateAd" enctype="multipart/form-data" method="post"><b>Enter the details below to publish your ad!</b><br><br>
+        <div class="settings">
+            <!--            book title          -->
+            <label>Book Title</label>
+            <table border="0">
+                <tr>
+                    <td>    
+                        <input type="text" ng-pattern="titleRegex" name="Name" ng-model="bookTitle" class="textbox" placeholder="The title of your book" required>
+                    </td>
+                    <td>
+                        <img width="25" height="25" ng-src="{{darkModeEnabled ? './invalid_input_dark.jpg' : './invalid_input_light.jpg'}}" ng-show= "frmCreateAd.Name.$dirty && frmCreateAd.bookTitle.$invalid" alt="Invalid title!" title="Invalid title!">
+                    </td>
+                </tr>
+            </table>
+        <!--            author          -->
+        <label>Author</label> 
+        <table border="0">
+            <tr>
+                <td>
+                    <input type="text" ng-pattern="nameRegex" name="Author" ng-model="author" class="textbox" placeholder="Name of the Author(s)" required>
+                </td>
+                <td>
+                    <img width="25" height="25" ng-src="{{darkModeEnabled ? './invalid_input_dark.jpg' : './invalid_input_light.jpg'}}" ng-show= "frmCreateAd.Author.$dirty && frmCreateAd.Author.$invalid" alt="Invalid name!" title="Invalid name!">
+                </td>
+            </tr>
+        </table>
+        <!--            publishing year          -->
+        <label>Publishing Year</label>    
+        <table border="0">
+            <tr>
+                <td>
+                    <input type="number" name="PubYear" ng-model="pubYear" class="textbox" placeholder="Which year was the book published in?" min="1000" max="9999" required>
+                </td>
+                <td>
+                    <img width="25" height="25" ng-src="{{darkModeEnabled ? './invalid_input_dark.jpg' : './invalid_input_light.jpg'}}" ng-show= "frmCreateAd.PubYear.$dirty && frmCreateAd.PubYear.$invalid" alt="Invalid year!" title="Invalid year!">
+                </td>
+            </tr>
+        </table>
+        <!--            edition          -->
+        <label>Edition</label>
+        <table border="0">
+            <tr>
+                <td>
+                    <input type="number" name="Edition" ng-model="edition" class="textbox" placeholder="What is the edition number of the book?" min="1" required>
+                </td>
+                <td>
+                    <img width="25" height="25" ng-src="{{darkModeEnabled ? './invalid_input_dark.jpg' : './invalid_input_light.jpg'}}" ng-show= "frmCreateAd.Edition.$dirty && frmCreateAd.Edition.$invalid" alt="Invalid edition number!" title="Invalid edition number!">
+                </td>
+            </tr>
+        </table>
+        <input type="hidden" id="userID" name="UploaderID">
+        <!--            price          -->
+        <label>Price (INR)</label>
+        <table border="0">
+            <tr>
+                <td>
+                    <input type="number" name="Price" ng-model="price" class="textbox" placeholder="What price would you like to sell it at?" min="0" required>
+                </td>
+                <td>
+                    <img width="25" height="25" ng-src="{{darkModeEnabled ? './invalid_input_dark.jpg' : './invalid_input_light.jpg'}}" ng-show= "frmCreateAd.Price.$dirty && frmCreateAd.Price.$invalid" alt="Invalid quantity!" title="Invalid quantity!">
+                </td>
+            </tr>
+        </table>
+        <!--            image of book          -->
+        <label>Sample Image of Book</label>
+        <input id="thumbImg" name="thumbImg" type="file" accept="image/*" required>
+            
+        <!--            description          -->
+        <label>Description</label>
+        <textarea type="text" placeholder="A optional description about the book..." name="Description" ng-model="description" cols="100" rows="20"></textarea>
+        <br><br>
+        </div>
+        <table>
+            <tr>
+                <td>                    
+                    <button type="submit" onclick=
+"submitData()" class="button" id="btnCreate" ng-disabled="frmCreateAd.Name.$invalid || frmCreateAd.Author.$invalid || frmCreateAd.Edition.$invalid || frmCreateAd.PubYear.$invalid || frmCreateAd.Price.$invalid">Publish!</button>
+                </td>
+                <td>
+                    <button type="reset" class="button">Clear All!</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div id="statusDiv" style="color: yellow"><strong><center>Attempting to send data to the server...</center></strong></div>
+</div>
+    <script>
+        function submitData() {
+            document.getElementById('statusDiv').style.display = 'block';
+            sendDataToServer("http://localhost:2000/createAd",
+                    new FormData(document.getElementById("uploadForm")), "POST",
+                function() {
+                    document.getElementById('statusDiv').style.color = systemIsInDarkMode() ? 'lightgreen' : 'green';
+                    document.getElementById('statusDiv').innerHTML = '<strong><center>Your ad was published successfully! You will be redirected to the homepage shortly...</center></strong>';
+                    setTimeout(
+                        function() {
+                            location.replace('../mainpage/main_page.html');
+                        }, 1250);
+                },
+                function() { //errorCallback
+                    document.getElementById('statusDiv').style.color = 'red';
+                    document.getElementById('statusDiv').innerHTML = '<strong><center>There was an error in processing the data you sent! Please try again in sometime!</center></strong>';
+                },
+                function() { //failureCallback
+                    document.getElementById('statusDiv').style.color = 'red';
+                    document.getElementById('statusDiv').innerHTML = '<strong><center>The data was not able to reach the server! Please check your connection and try again in a while!</center></strong>';
+
+                }
+            );
+        }
+        
+        function gotoPage(url, shouldLogout) {
+            if (confirm('Leave page? Any data you entered will be lost! Press OK to confirm.')) {
+                if (shouldLogout)
+                    handleLogout();
+                
+                location.replace(url);
+            }
+        }
+        
+        if (localStorage.getItem('currentUname') === null || localStorage.getItem('currentUname') == 'null' || (sessionStorage.getItem('userLoggedIn') != 'true')) {
+            window.location.replace('../mainpage/main_page.html');
+        }
+        else {
+            angular.module('createAdApp', [])
+                .controller('formCtrl', function($scope) {
+                    $scope.darkModeEnabled = systemIsInDarkMode();
+
+                    $scope.nameRegex = "[a-zA-Z][a-zA-Z, ]+";
+                    $scope.titleRegex = "[A-Za-z0-9     -_,.;:()]+";
+
+                });
+            angular.bootstrap(document.getElementById("createAdDiv"), ['createAdApp']);
+            onFormLoad();
+
+            function onFormLoad() {
+                toggleDarkMode();
+                document.getElementById('userID').value = localStorage.currentUname;
+                document.getElementById('statusDiv').style.display = 'none';
+            }
+
+            function toggleDarkMode() {
+                if (systemIsInDarkMode()) {
+                    // dark mode
+                    var element = document.body;
+                    element.classList.toggle("dark-mode");
+                    document.getElementById('createAdDiv').style.backgroundColor = '#212121';
+                }
+                else {
+                    document.getElementById('createAdDiv').style.backgroundColor = 'white';
+                }
+            }
+        }
+        
+    </script>
+</body>    
+</html>

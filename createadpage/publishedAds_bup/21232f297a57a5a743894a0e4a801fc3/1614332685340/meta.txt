@@ -1,0 +1,2 @@
+{Name : "Objective Mathematics", Author : "RD Sharma", PubYear : "2008", Edition : "7th", UploaderID : "admin", ArrivalTime: 1614332685340, Available: "YES", Price: 350, ImgLink : "C:\Users\Sandeep S\Sandeep Data\SSNCE Docs\Sem 6\WPLab\WebsiteDesign\createadpage\publishedAds\21232f297a57a5a743894a0e4a801fc3\1614332685340\ThumbImg.jpg"
+}

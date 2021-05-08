@@ -1,0 +1,152 @@
+<!DOCTYPE html>    
+<html>
+    <script src="../commons/commons.js"></script>
+    <style>
+        body {  
+            margin: 0;  
+            padding: 0;  
+            font-family: 'Segoe UI';  
+        }  
+        .login {  
+            width: 382px;
+            border-style: solid;
+            overflow: hidden;  
+            margin: auto;  
+            margin: 20 0 0 450px;  
+            padding: 80px;  
+            border-radius: 15px;  
+        }  
+        h2 {  
+            text-align: center;  
+            padding: 20px;  
+        }  
+        label {  
+            font-size: 17px;  
+        }  
+        #txtUname {  
+            width: 300px;  
+            height: 30px;  
+            border: none;  
+            border-radius: 3px; 
+            border-style: solid;
+            padding-left: 8px;  
+        }  
+        #txtPass {  
+            width: 300px;  
+            height: 30px;  
+            border: none;  
+            border-radius: 3px;  
+            border-style: solid;
+            padding-left: 8px;  
+
+        }  
+        #btnLogin{  
+            width: 315px;  
+            height: 30px;  
+            border: none;  
+            border-radius: 17px;  
+            padding-left: 7px;  
+        }  
+        span {  
+            font-size: 17px;  
+        }  
+        a {  
+            float: right;  
+        }
+        .dark-mode {
+            background-color: #212121;
+            color: white;
+            border-color: white;
+        }
+    </style>
+<head>    
+    <title>OldBooks Portal Login</title>
+</head>    
+<body>    
+    <h2>Enter your details to sign in</h2><br>    
+    <div class="login">    
+    <form id="login" method="get">    
+        <label><b>User Name     
+        </b>    
+        </label>    
+        <input type="text" name="txtUname" id="txtUname" placeholder="Username" required>    
+        <br><br>    
+        <label><b>Password     
+        </b>    
+        </label>    
+        <input type="Password" name="txtPass" id="txtPass" placeholder="Password" required>    
+        <br><br>    
+        <input type="button" name="btnLogin" id="btnLogin" value="Sign In!" onclick="handleLogin();">       
+        <br><br>    
+        <input type="checkbox" id="cbxRememberUsr">  
+        <span>Remember me</span>
+        <br><br>
+        <div id="invalidMessage" style="color: yellow">Processing, please wait...</div>
+    </form>    
+</div>
+    <script>
+        onFormLoad();
+        
+        function handleLogin() {
+            var uname = document.getElementById('txtUname').value,
+                pwd = document.getElementById('txtPass').value;
+            
+            var handlerCallback = function(status, responseText) {
+                if (status === 200) {
+                    var response = JSON.parse(responseText);
+                    var authState = response['response'];
+                    
+                    if (authState === "OK") {
+                        var isChecked = document.getElementById('cbxRememberUsr').checked;
+                        localStorage.setItem('rememberUser', isChecked);
+                        localStorage.setItem('currentUname', uname);
+                        sessionStorage.setItem('userLoggedIn', 'true');
+                        localStorage.setItem('userMobNo', response['mobileNo']);
+                        localStorage.setItem('userFullName', response['name']['first'] + " " + response['name']['last']);
+                        window.open('../mainpage/main_page.html', '_self');
+                    }
+                    else if (authState === "BADAUTH") {
+                        document.getElementById('invalidMessage').style.display = 'block';
+                        document.getElementById('invalidMessage').style.color = 'red';
+            
+                        document.getElementById('invalidMessage').innerHTML = 'Invalid login credentials! Please try again.';
+                    }
+                }
+                else {
+                    document.getElementById('invalidMessage').style.display = 'block';
+                    document.getElementById('invalidMessage').style.color = 'red';
+                    
+                    document.getElementById('invalidMessage').innerHTML = "Could not communicate with the server! Check your connection.";
+                }
+            };
+            authUser(uname, pwd, handlerCallback);
+            document.getElementById('invalidMessage').style.display = 'block';
+            document.getElementById('invalidMessge').innerHTML = "<strong><center>Processing, please wait...</center></strong>";
+            document.getElementById('invalidMessage').style.color = 'yellow';
+        }
+        
+        function authUser(uname, pwd, handlerCallback) {
+            fetchResultFromServer("http://localhost:2002/authUser",
+                JSON.stringify({
+                    "uIDhash" : uname,
+                    "pwdHash" : pwd
+                }), 
+                "POST",
+                handlerCallback
+            );
+        }
+      
+        function onFormLoad() {
+            toggleDarkMode();
+            document.getElementById('invalidMessage').style.display = 'none';
+        }
+        function toggleDarkMode() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                // dark mode
+                var element = document.body;
+                element.classList.toggle("dark-mode");
+            }
+        }
+    </script>
+</body>    
+</html>

@@ -1,0 +1,3 @@
+{Name : "Concepts of Physics 1", Author : "HC Verma", PubYear : "2005",
+Edition : "3rd", UploaderID : "admin", ArrivalTime: 1613757600000, Available: "NO", Price: 350, ImgLink: "C:\Users\Sandeep S\Sandeep Data\SSNCE Docs\Sem 6\WPLab\WebsiteDesign\createadpage\publishedAds\21232f297a57a5a743894a0e4a801fc3\1613757600000\ThumbImg.jpeg"
+}

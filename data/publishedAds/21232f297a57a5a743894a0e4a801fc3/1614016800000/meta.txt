@@ -1,0 +1,2 @@
+{Name : "Operating Systems Concepts", Author : "Abraham Silberschatz, Peter B. Galvin, Greg Gagne", PubYear : "2016", Edition : "8th", UploaderID : "admin", ArrivalTime: 1614016800000, Available: "YES", Price: 600, ImgLink : "../../data/publishedAds\21232f297a57a5a743894a0e4a801fc3\1614016800000\ThumbImg.jpg"
+}
